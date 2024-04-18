@@ -3,6 +3,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("jvm")
     id("org.jetbrains.compose")
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 group = "com.example"
@@ -20,6 +21,13 @@ dependencies {
     // (in a separate module for demo project and in testMain).
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
+
+    // File picker
+    implementation("com.darkrockstudios:mpfilepicker:3.1.0")
+
+    // Serialization
+    implementation("io.github.pdvrieze.xmlutil:core:0.86.3")
+    implementation("io.github.pdvrieze.xmlutil:serialization:0.86.3")
 }
 
 compose.desktop {
