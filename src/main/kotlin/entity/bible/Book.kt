@@ -1,4 +1,4 @@
-package bible
+package entity.bible
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -14,5 +14,9 @@ data class Book(
     @SerialName("bsname")
     val shortName: String = name.take(3),
     @XmlElement(true)
-    val chapters: List<Chapter>
-)
+    val chapters: List<Chapter>,
+) {
+    companion object {
+        val Placeholder = Book("(Book)", 0, chapters = emptyList())
+    }
+}

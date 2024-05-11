@@ -1,4 +1,4 @@
-package bible
+package entity.bible
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -11,4 +11,8 @@ data class Verse(
     val number: Int,
     @XmlValue
     val text: String,
-)
+) {
+    companion object {
+        val Placeholder = Verse(0, "")
+    }
+}

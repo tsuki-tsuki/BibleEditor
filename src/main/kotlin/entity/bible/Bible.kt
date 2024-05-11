@@ -1,4 +1,4 @@
-package bible
+package entity.bible
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
