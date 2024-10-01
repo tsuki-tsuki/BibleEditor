@@ -1,9 +1,6 @@
 package ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -19,6 +16,7 @@ fun SingleVerseEditWindow(
     isOpen: Boolean,
     onClose: () -> Unit,
     reference: Reference,
+    onSave: (String) -> Unit,
 ) {
     if (isOpen) DialogWindow(
         onCloseRequest = onClose,
@@ -27,11 +25,19 @@ fun SingleVerseEditWindow(
     ) {
         MaterialTheme {
             Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxSize()) {
-                var verseContent by remember { mutableStateOf(reference.verse.text) }
-                OutlinedTextField(verseContent, onValueChange = { verseContent = it }, modifier = Modifier.weight(1f))
+                var verseContent by remember(reference) { mutableStateOf(reference.verse.text) }
+                OutlinedTextField(
+                    verseContent,
+                    onValueChange = { verseContent = it },
+                    enabled = reference.isValid,
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                )
 
                 Row(modifier = Modifier.align(Alignment.End)) {
-                    TextButton({}) { Text("Save") }
+                    TextButton(
+                        onClick = { onSave(verseContent) },
+                        enabled = reference.isValid && verseContent != reference.verse.text,
+                    ) { Text("Save") }
                     TextButton(onClose) { Text("Cancel") }
                 }
             }
