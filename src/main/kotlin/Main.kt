@@ -2,10 +2,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.util.fastJoinToString
 import androidx.compose.ui.window.application
 import com.darkrockstudios.libraries.mpfilepicker.FilePicker
-import entity.bible.Bible
-import entity.bible.Book
-import entity.bible.Chapter
-import entity.bible.Verse
+import entity.bible.*
 import nl.adaptivity.xmlutil.serialization.XML
 import ui.MainWindow
 import ui.SingleVerseEditWindow
@@ -57,8 +54,6 @@ fun main() = application {
     SingleVerseEditWindow(
         isOpen = showEditWindow,
         onClose = { showEditWindow = false },
-        selectedBook = selectedBook,
-        selectedChapter = selectedChapter,
-        selectedVerse = selectedVerse
+        reference = Reference(selectedBook, selectedChapter, selectedVerse),
     )
 }
