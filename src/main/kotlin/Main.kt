@@ -30,8 +30,8 @@ fun main() = application {
         }
     }
     var selectedBook by remember(chosenFilePath) { mutableStateOf(Book.Placeholder) }
-    var selectedChapter by remember(chosenFilePath) { mutableStateOf(Chapter.Placeholder) }
-    var selectedVerse by remember(chosenFilePath) { mutableStateOf(Verse.Placeholder) }
+    var selectedChapter by remember(chosenFilePath, selectedBook) { mutableStateOf(Chapter.Placeholder) }
+    var selectedVerse by remember(chosenFilePath, selectedBook, selectedChapter) { mutableStateOf(Verse.Placeholder) }
 
     // Control dialog
     FilePicker(show = showPicker, fileExtensions = listOf("xml")) { file ->
