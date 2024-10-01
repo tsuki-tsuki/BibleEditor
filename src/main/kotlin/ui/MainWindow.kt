@@ -60,11 +60,12 @@ fun MainWindow(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     var bookPicker by remember { mutableStateOf(false) }
+                    val bookList = bibleContent?.books.orEmpty()
                     Picker(
-                        expanded = bookPicker,
+                        expanded = bookList.isNotEmpty() && bookPicker,
                         onExpandedChange = { bookPicker = it },
                         label = "Book",
-                        items = bibleContent?.books.orEmpty(),
+                        items = bookList,
                         selectedItem = selectedBook,
                         onItemSelected = onSelectBook,
                         itemValue = { it.name },
@@ -72,11 +73,12 @@ fun MainWindow(
                     )
 
                     var chapterPicker by remember { mutableStateOf(false) }
+                    val chapterList = selectedBook.chapters
                     Picker(
-                        expanded = chapterPicker,
+                        expanded = chapterList.isNotEmpty() && chapterPicker,
                         onExpandedChange = { chapterPicker = it },
                         label = "Chapter",
-                        items = selectedBook.chapters,
+                        items = chapterList,
                         selectedItem = selectedChapter,
                         onItemSelected = onSelectChapter,
                         itemValue = { it.numberString },
@@ -88,9 +90,10 @@ fun MainWindow(
                     items(selectedChapter.verses) {
                         Row(
                             verticalAlignment = Alignment.Top,
-                            modifier = Modifier.clickable { onSingleEditRequest(it) },
+                            modifier = Modifier.fillMaxWidth().clickable { onSingleEditRequest(it) },
+                            horizontalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
-                            Text("${it.number}".padStart(2).padEnd(3), fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Text("${it.number}".padStart(3), fontWeight = FontWeight.Bold, fontSize = 12.sp)
                             Text(it.text)
                         }
                     }
