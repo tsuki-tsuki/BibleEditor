@@ -24,6 +24,9 @@ import ui.component.Picker
 @Preview
 @Composable
 fun MainWindow(
+    // State
+    isUpdated: Boolean,
+
     // UI control
     onCloseRequest: () -> Unit,
     onSingleEditRequest: (Verse) -> Unit,
@@ -37,13 +40,14 @@ fun MainWindow(
     selectedChapter: Chapter,
     onSelectChapter: (Chapter) -> Unit,
 ) {
-    Window(onCloseRequest = onCloseRequest, title = "Bible Editor") {
+    val title = "Bible Editor".let { if (isUpdated) "$it*" else it }
+    Window(onCloseRequest = onCloseRequest, title = title) {
         MaterialTheme {
             Column(modifier = Modifier.padding(10.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column {
                         Button(onClick = onLoadBibleRequest) { Text("Load") }
-                        Button(onClick = onSaveBibleRequest, enabled = false) { Text("Save") }
+                        Button(onClick = onSaveBibleRequest, enabled = isUpdated) { Text("Save") }
                     }
 
                     Text(
