@@ -10,25 +10,27 @@ import kotlin.io.path.Path
 import kotlin.io.path.useLines
 
 fun main() = application {
+    // App state
+    var chosenFilePath by remember { mutableStateOf("") }
+    var bibleContent by remember(chosenFilePath) { mutableStateOf<Bible?>(null) }
+    var selectedBook by remember(chosenFilePath) { mutableStateOf(Book.Placeholder) }
+    var selectedChapter by remember(chosenFilePath, selectedBook) { mutableStateOf(Chapter.Placeholder) }
+    var selectedVerse by remember(chosenFilePath, selectedBook, selectedChapter) { mutableStateOf(Verse.Placeholder) }
+    val currentReference by derivedStateOf { Reference(selectedBook, selectedChapter, selectedVerse) }
+
     // UI control
     var showEditWindow by remember { mutableStateOf(false) }
     var showPicker by remember { mutableStateOf(false) }
 
-    // App state
-    var chosenFilePath by remember { mutableStateOf("") }
-    val bibleContent by remember(chosenFilePath) {
-        derivedStateOf {
-            runCatching {
-                Path(chosenFilePath)
-                    .useLines { it.toList() }
-                    .fastJoinToString("")
-                    .let { XML.decodeFromString<Bible>(it) }
-            }.getOrNull()
-        }
+    // Load Bible content from file
+    LaunchedEffect(chosenFilePath) {
+        bibleContent = runCatching {
+            Path(chosenFilePath)
+                .useLines { it.toList() }
+                .fastJoinToString("")
+                .let { XML.decodeFromString<Bible>(it) }
+        }.getOrNull()
     }
-    var selectedBook by remember(chosenFilePath) { mutableStateOf(Book.Placeholder) }
-    var selectedChapter by remember(chosenFilePath, selectedBook) { mutableStateOf(Chapter.Placeholder) }
-    var selectedVerse by remember(chosenFilePath, selectedBook, selectedChapter) { mutableStateOf(Verse.Placeholder) }
 
     // Control dialog
     FilePicker(show = showPicker, fileExtensions = listOf("xml")) { file ->
