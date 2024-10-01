@@ -1,5 +1,4 @@
 import androidx.compose.runtime.*
-import androidx.compose.ui.util.fastJoinToString
 import androidx.compose.ui.window.application
 import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 import entity.bible.*
@@ -14,8 +13,8 @@ fun main() = application {
     var chosenFilePath by remember { mutableStateOf("") }
     var bibleContent by remember(chosenFilePath) { mutableStateOf<Bible?>(null) }
     var selectedBook by remember(chosenFilePath) { mutableStateOf(Book.Placeholder) }
-    var selectedChapter by remember(chosenFilePath, selectedBook) { mutableStateOf(Chapter.Placeholder) }
-    var selectedVerse by remember(chosenFilePath, selectedBook, selectedChapter) { mutableStateOf(Verse.Placeholder) }
+    var selectedChapter by remember(chosenFilePath) { mutableStateOf(Chapter.Placeholder) }
+    var selectedVerse by remember(chosenFilePath) { mutableStateOf(Verse.Placeholder) }
     val currentReference by derivedStateOf { Reference(selectedBook, selectedChapter, selectedVerse) }
 
     // UI control
@@ -26,8 +25,7 @@ fun main() = application {
     LaunchedEffect(chosenFilePath) {
         bibleContent = runCatching {
             Path(chosenFilePath)
-                .useLines { it.toList() }
-                .fastJoinToString("")
+                .useLines { it.joinToString("") }
                 .let { XML.decodeFromString<Bible>(it) }
         }.getOrNull()
     }
@@ -49,13 +47,29 @@ fun main() = application {
         onSaveBibleRequest = { TODO("save") },
         bibleContent = bibleContent,
         selectedBook = selectedBook,
-        onSelectBook = { selectedBook = it },
+        onSelectBook = {
+            selectedBook = it
+            selectedChapter = Chapter.Placeholder
+            selectedVerse = Verse.Placeholder
+        },
         selectedChapter = selectedChapter,
-        onSelectChapter = { selectedChapter = it }
+        onSelectChapter = {
+            selectedChapter = it
+            selectedVerse = Verse.Placeholder
+        }
     )
     SingleVerseEditWindow(
         isOpen = showEditWindow,
         onClose = { showEditWindow = false },
-        reference = Reference(selectedBook, selectedChapter, selectedVerse),
+        reference = currentReference,
+        onSave = { nextText ->
+            bibleContent = bibleContent?.updateContent(currentReference, nextText)
+            // refresh content
+            currentReference.also { (book, chapter, verse) ->
+                selectedBook = bibleContent?.books?.find { it.number == book.number } ?: book
+                selectedChapter = selectedBook.chapters.find { it.number == chapter.number } ?: chapter
+                selectedVerse = selectedChapter.verses.find { it.number == verse.number } ?: verse
+            }
+        }
     )
 }
