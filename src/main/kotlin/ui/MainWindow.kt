@@ -81,7 +81,7 @@ fun MainWindow(
                         items = chapterList,
                         selectedItem = selectedChapter,
                         onItemSelected = onSelectChapter,
-                        itemValue = { it.numberString },
+                        itemValue = { if (it.number > 0) it.number.toString() else "(Chapter)" },
                         modifier = Modifier.weight(.4f),
                     )
                 }
