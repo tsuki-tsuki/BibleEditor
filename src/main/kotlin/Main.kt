@@ -29,14 +29,14 @@ fun main() = application {
             }.getOrNull()
         }
     }
-    var selectedBook by remember { mutableStateOf(Book.Placeholder) }
-    var selectedChapter by remember { mutableStateOf(Chapter.Placeholder) }
-    var selectedVerse by remember { mutableStateOf(Verse.Placeholder) }
+    var selectedBook by remember(chosenFilePath) { mutableStateOf(Book.Placeholder) }
+    var selectedChapter by remember(chosenFilePath) { mutableStateOf(Chapter.Placeholder) }
+    var selectedVerse by remember(chosenFilePath) { mutableStateOf(Verse.Placeholder) }
 
     // Control dialog
     FilePicker(show = showPicker, fileExtensions = listOf("xml")) { file ->
         showPicker = false
-        chosenFilePath = file?.path.orEmpty()
+        file?.also { chosenFilePath = it.path }
     }
 
     // Windows
