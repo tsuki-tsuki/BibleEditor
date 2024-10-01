@@ -15,4 +15,6 @@ data class Verse(
     companion object {
         val Placeholder = Verse(0, "")
     }
+
+    fun updateContent(newContent: String) = copy(text = newContent)
 }

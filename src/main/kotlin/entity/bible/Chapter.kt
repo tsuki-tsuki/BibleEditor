@@ -15,4 +15,14 @@ data class Chapter(
     companion object {
         val Placeholder = Chapter(0, emptyList())
     }
+
+    fun updateContent(reference: Reference, newContent: String): Chapter {
+        val targetVerseId = verses.indexOfFirst { it.number == reference.verse.number }
+        val targetVerse = verses[targetVerseId]
+        val updatedVerse = targetVerse.updateContent(newContent)
+        val updatedVerses = verses.mapIndexed { index, verse ->
+            if (index == targetVerseId) updatedVerse else verse
+        }
+        return copy(verses = updatedVerses)
+    }
 }

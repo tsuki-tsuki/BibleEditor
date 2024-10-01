@@ -20,5 +20,15 @@ data class Bible(
     @XmlElement(true)
     val info: BibleInfo,
     @XmlElement(true)
-    val books: List<Book>
-)
+    val books: List<Book>,
+) {
+    fun updateContent(reference: Reference, newContent: String): Bible {
+        val targetBookId = books.indexOfFirst { it.number == reference.book.number }
+        val targetBook = books[targetBookId]
+        val updatedBook = targetBook.updateContent(reference, newContent)
+        val updatedBooks = books.mapIndexed { index, book ->
+            if (index == targetBookId) updatedBook else book
+        }
+        return copy(books = updatedBooks)
+    }
+}

@@ -19,4 +19,14 @@ data class Book(
     companion object {
         val Placeholder = Book("(Book)", 0, chapters = emptyList())
     }
+
+    fun updateContent(reference: Reference, newContent: String): Book {
+        val targetChapterId = chapters.indexOfFirst { it.number == reference.chapter.number }
+        val targetChapter = chapters[targetChapterId]
+        val updatedChapter = targetChapter.updateContent(reference, newContent)
+        val updatedChapters = chapters.mapIndexed { index, chapter ->
+            if (index == targetChapterId) updatedChapter else chapter
+        }
+        return copy(chapters = updatedChapters)
+    }
 }
