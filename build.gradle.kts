@@ -6,8 +6,8 @@ plugins {
     kotlin("plugin.serialization") version "1.9.22"
 }
 
-group = "com.example"
-version = "1.0-SNAPSHOT"
+group = "io.github.tsuki"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -27,7 +27,7 @@ dependencies {
 
     // Serialization
     implementation("io.github.pdvrieze.xmlutil:core:0.86.3")
-    implementation("io.github.pdvrieze.xmlutil:serialization:0.86.3")
+    implementation("io.github.pdvrieze.xmlutil:serialization:0.90.0")
 }
 
 compose.desktop {
