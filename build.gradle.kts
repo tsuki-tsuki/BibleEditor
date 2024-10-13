@@ -3,7 +3,8 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("jvm")
     id("org.jetbrains.compose")
-    kotlin("plugin.serialization") version "2.0.20"
+    id("org.jetbrains.kotlin.plugin.compose")
+    kotlin("plugin.serialization")
 }
 
 group = "io.github.tsuki"
@@ -35,9 +36,18 @@ compose.desktop {
         mainClass = "MainKt"
 
         nativeDistributions {
+            windows {
+                includeAllModules = true
+            }
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "BibleEditor"
             packageVersion = "1.0.0"
+        }
+
+        buildTypes.release.proguard {
+            obfuscate = false
+            optimize = false
+            version = "7.6.0"
         }
     }
 }
